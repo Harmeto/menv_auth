@@ -22,7 +22,7 @@ const UserSchema = Schema(
             type: String, 
             required: true,
         },
-        first_name:{
+        last_name:{
             type: String, 
             required: true,
         },
@@ -38,6 +38,12 @@ const UserSchema = Schema(
             full_name: {
                 get(){
                     return this.first_name + ' ' + this.last_name
+                }
+            },
+
+            id: {
+                get(){
+                    return this._id
                 }
             }
         }

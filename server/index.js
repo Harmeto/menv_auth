@@ -11,6 +11,7 @@ import connect from './config/database.js';
 import credentials from './config/credentials.js';
 import errorHandler from './midldleware/error_handler.js';
 import authRouter from './routes/api/auth.js';
+import authentication from './midldleware/authentication.js';
 
 configDotenv();
 
@@ -35,6 +36,9 @@ app.use(express.json());
 
 //middleware for cookies 
 app.use(cookieParser());
+
+//auth
+app.use(authentication);
 
 // static files 
 app.use('/static', express.static(path.resolve("public")))

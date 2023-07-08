@@ -12,7 +12,7 @@ async function register(req, res){
     
     const userExist = await User.exists({email}).exec()
 
-    if(userExist) return res.status(409)
+    if(userExist) return res.sendStatus(409)
    
     try{
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -41,7 +41,7 @@ async function login(req, res){
 
     const accessToken = jsonwebtoken.sign(
         {
-            username: user.username
+            id: user.id
         }, 
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -51,7 +51,7 @@ async function login(req, res){
 
     const refreshToken = jsonwebtoken.sign(
         {
-            username: user.username
+            id: user.id
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
@@ -90,10 +90,39 @@ async function logout(req, res){
     res.sendStatus(204)
 }
 async function refresh(req, res){
-    res.sendStatus(200);
+    const cookies = req.cookies;
+    if(!cookies.refresh_token) return res.sendStatus(401)
+    const refreshToken = cookies.refresh_token
+
+    const user = await User.findOne({refresh_token: refreshToken}).exec()
+
+    if(!user) return res.sendStatus(403)
+
+    jsonwebtoken.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET, 
+        (err, decoded)=>{
+            if(err || user.id !== decoded.id) return res.sendStatus(403)
+
+            const accessToken = jsonwebtoken.sign(
+                {
+                    id: decoded.id
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                {
+                    expiresIn: '1800s'
+                }
+            )
+
+            res.json({access_token: accessToken})
+        }
+    )
 }
 async function user(req, res){
-    res.sendStatus(200);
+    
+    const user = req.user
+    
+    return res.status(200).json(user);
 }
 
 export {register, login, logout, refresh, user}
