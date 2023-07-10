@@ -1,13 +1,23 @@
-#MENV APP AUTH - BackEnd 
--- Register an user 
--- Login/Logout
--- Refresh
--- User
+# MENV APP AUTH - BackEnd  
+- Register an user 
+- Login/Logout
+- Refresh
+- User
 
--- Install depencies 
+## Run proyect: 
+    npm i 
+    npm run dev
 
-#npm i 
+[Documentation API](https://documenter.getpostman.com/view/21930525/2s93zH1eNY)
 
--- Run Proyect
+# MENV APP FRONT - FrontEnd
 
-#npm run dev
+## Views
+- Login
+- Register
+- User
+- Home 
+
+## Run proyect: 
+    npm i 
+    npm run dev
